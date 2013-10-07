@@ -13,10 +13,10 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_item"
-    android:layout_width="120dp"
-    android:layout_height="120dp"
+    android:layout_width="420dp"
+    android:layout_height="320dp"
     android:gravity="center"
     android:background="@drawable/widget_item_background"
     android:textColor="#ffffff"

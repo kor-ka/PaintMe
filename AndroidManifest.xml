@@ -35,5 +35,7 @@
         <service android:name="StackWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"
             android:exported="false" />
+		
     </application>
+	<uses-permission android:name="android.permission.INTERNET" /> 
 </manifest>

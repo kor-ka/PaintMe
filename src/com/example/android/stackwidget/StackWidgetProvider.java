@@ -52,6 +52,7 @@ public class StackWidgetProvider extends AppWidgetProvider {
                     AppWidgetManager.INVALID_APPWIDGET_ID);
             int viewIndex = intent.getIntExtra(EXTRA_ITEM, 0);
             Toast.makeText(context, "Touched view " + viewIndex, Toast.LENGTH_SHORT).show();
+			
         }
         super.onReceive(context, intent);
     }
@@ -74,6 +75,8 @@ public class StackWidgetProvider extends AppWidgetProvider {
             // The empty view is displayed when the collection has no items. It should be a sibling
             // of the collection view.
             rv.setEmptyView(R.id.stack_view, R.id.empty_view);
+			
+			
 
             // Here we setup the a pending intent template. Individuals items of a collection
             // cannot setup their own pending intents, instead, the collection as a whole can

@@ -25,6 +25,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+import android.graphics.*;
+import java.net.*;
+import java.io.*;
 
 public class StackWidgetService extends RemoteViewsService {
     @Override
@@ -34,8 +37,8 @@ public class StackWidgetService extends RemoteViewsService {
 }
 
 class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
-    private static final int mCount = 10;
-    private List<WidgetItem> mWidgetItems = new ArrayList<WidgetItem>();
+    private static final int mCount = 3;
+    private List<String> mWidgetItems = new ArrayList<String>();
     private Context mContext;
     private int mAppWidgetId;
 
@@ -49,9 +52,11 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // In onCreate() you setup any connections / cursors to your data source. Heavy lifting,
         // for example downloading or creating content etc, should be deferred to onDataSetChanged()
         // or getViewAt(). Taking more than 20 seconds in this call will result in an ANR.
-        for (int i = 0; i < mCount; i++) {
-            mWidgetItems.add(new WidgetItem(i + "!"));
-        }
+      //  for (int i = 0; i < mCount; i++) {
+            mWidgetItems.add("http://www.thinkwiki.org/w/images/2/20/Simple_tux.png");
+		mWidgetItems.add("http://upload.wikimedia.org/wikipedia/commons/6/64/Gnu_meditate_levitate.png");
+		mWidgetItems.add("http://4.bp.blogspot.com/-CJjfS1fLI4I/T-mog_jnJ_I/AAAAAAAARZw/5mq_gKlONGY/s200/eldesastredemaria.blogspot.com+pngnofamosos+(63).png");
+    //    }
 
         // We sleep for 3 seconds here to show how the empty view appears in the interim.
         // The empty view is set in the StackWidgetProvider and should be a sibling of the
@@ -79,7 +84,9 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // We construct a remote views item based on our widget item xml file, and set the
         // text based on the position.
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_item);
-        rv.setTextViewText(R.id.widget_item, mWidgetItems.get(position).text);
+        //rv.setTextViewText(R.id.widget_item, mWidgetItems.get(position).text);		
+		rv.setImageViewResource(R.id.widget_item, R.drawable.chart);
+		
 
         // Next, we set a fill-intent which will be used to fill-in the pending intent template
         // which is set on the collection view in StackWidgetProvider.
@@ -94,8 +101,11 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // synchronously. A loading view will show up in lieu of the actual contents in the
         // interim.
         try {
+			Thread.sleep(500);
+			Bitmap bmp = getBitmapFromURL(mWidgetItems.get(position));	
+			rv.setImageViewBitmap(R.id.widget_item, bmp);
             System.out.println("Loading view " + position);
-            Thread.sleep(500);
+            
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -129,5 +139,25 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // from the network, etc., it is ok to do it here, synchronously. The widget will remain
         // in its current state while work is being done here, so you don't need to worry about
         // locking up the widget.
+		
     }
+	
+	public static Bitmap getBitmapFromURL(String src) {  
+        try {
+
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url
+                    .openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap mybitmap = BitmapFactory.decodeStream(input);
+
+            return mybitmap;
+
+        } catch (Exception ex) {
+
+            return null;
+        }
+	}
 }
