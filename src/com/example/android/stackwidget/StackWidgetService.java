@@ -39,7 +39,7 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private Context mContext;
     private int mAppWidgetId;
 	Bitmap bmp;
-	SharedPreferences shp;
+
 
     public StackRemoteViewsFactory(Context context, Intent intent) {
         mContext = context;
@@ -100,11 +100,28 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // synchronously. A loading view will show up in lieu of the actual contents in the
         // interim.
 		if(isOnline()){
-			shp =mContext.getSharedPreferences("mshp",mContext.MODE_PRIVATE);
+		
 			try {
 				Thread.sleep(500);
 				bmp = getBitmapFromURL(mWidgetItems.get(position));	
 
+				String path = Environment.getExternalStorageDirectory().toString();
+				OutputStream fOut = null;
+				File exportDir = new File(Environment.getExternalStorageDirectory(), "PaintMe");
+
+	        		if (!exportDir.exists()) { exportDir.mkdirs(); }
+
+				SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+		    		String date = sdf.format(new Date(System.currentTimeMillis()));
+
+	        		File file = new File(exportDir, position+".png");
+				fOut = new FileOutputStream(file);
+
+				getImageBitmap(mWidgetItems.get(position)).compress(Bitmap.CompressFormat.PNG, 100, fOut);
+				fOut.flush();
+				fOut.close();
+
+				MediaStore.Images.Media.insertImage(getContentResolver(),file.getAbsolutePath(),file.getName(),file.getName());
 				
 				System.out.println("Loading view " + position);
 
