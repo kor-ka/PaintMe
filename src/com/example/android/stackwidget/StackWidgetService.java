@@ -137,9 +137,13 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			
+		}else{
+			bmp = getBitmapFromSd(position);
+			
 		}
 		
-		rv.setImageViewBitmap(R.id.widget_item, bmp);
+	rv.setImageViewBitmap(R.id.widget_item, bmp);
 
         // Return the remote views object.
         return rv;
@@ -187,11 +191,23 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
             return mybitmap;
 
-        } catch (Exception ex) {
+        	} catch (Exception ex) {
 
             return null;
-        }
+        	}
 	}
+	
+	public static Bitmap getBitmapFromSd(int position) {  
+        
+
+            	BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+		Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory()+"/"+position+".png", options);
+            	return bitmap;
+
+
+	}
+	
 	public boolean isOnline() {
 		ConnectivityManager cm =(ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
