@@ -17,7 +17,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:minWidth="110dip"
   android:minHeight="110dip"
-  android:updatePeriodMillis="3600000"
+  android:updatePeriodMillis="99360000000"
   android:previewImage="@drawable/preview"
   android:initialLayout="@layout/widget_layout"
   android:autoAdvanceViewId="@id/stack_view">

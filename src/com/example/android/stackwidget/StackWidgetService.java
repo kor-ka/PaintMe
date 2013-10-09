@@ -16,18 +16,15 @@
 
 package com.example.android.stackwidget;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.appwidget.AppWidgetManager;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.RemoteViews;
-import android.widget.RemoteViewsService;
+import android.appwidget.*;
+import android.content.*;
 import android.graphics.*;
-import java.net.*;
+import android.net.*;
+import android.os.*;
+import android.widget.*;
 import java.io.*;
+import java.net.*;
+import java.util.*;
 
 public class StackWidgetService extends RemoteViewsService {
     @Override
@@ -41,6 +38,8 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private List<String> mWidgetItems = new ArrayList<String>();
     private Context mContext;
     private int mAppWidgetId;
+	Bitmap bmp;
+	SharedPreferences shp;
 
     public StackRemoteViewsFactory(Context context, Intent intent) {
         mContext = context;
@@ -53,9 +52,9 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // for example downloading or creating content etc, should be deferred to onDataSetChanged()
         // or getViewAt(). Taking more than 20 seconds in this call will result in an ANR.
       //  for (int i = 0; i < mCount; i++) {
-            mWidgetItems.add("http://www.thinkwiki.org/w/images/2/20/Simple_tux.png");
-		mWidgetItems.add("http://upload.wikimedia.org/wikipedia/commons/6/64/Gnu_meditate_levitate.png");
-		mWidgetItems.add("http://4.bp.blogspot.com/-CJjfS1fLI4I/T-mog_jnJ_I/AAAAAAAARZw/5mq_gKlONGY/s200/eldesastredemaria.blogspot.com+pngnofamosos+(63).png");
+		mWidgetItems.add("https://dl.dropboxusercontent.com/s/b503c92w7d7uuxb/72.png?token_hash=AAH--mSSyV1AiNGYJKFX5eoTPKuQtyLcrP7TclbYs7UVLA&dl=1");
+		mWidgetItems.add("https://dl.dropboxusercontent.com/s/22dxa79gac3jds8/550587.png?token_hash=AAFO0LcwahGd9dAzPHKckMU5dH3W1buoVv4LrCaHfATkCQ&dl=1");
+		mWidgetItems.add("https://dl.dropboxusercontent.com/s/iowxdnbor2v28j2/Simple_tux.png?token_hash=AAFNAciWARCOqZBhcJuBveVt0tA0vLjRS1euLUPh8nKgCQ&dl=1");
     //    }
 
         // We sleep for 3 seconds here to show how the empty view appears in the interim.
@@ -85,7 +84,7 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // text based on the position.
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_item);
         //rv.setTextViewText(R.id.widget_item, mWidgetItems.get(position).text);		
-		rv.setImageViewResource(R.id.widget_item, R.drawable.chart);
+		
 		
 
         // Next, we set a fill-intent which will be used to fill-in the pending intent template
@@ -100,15 +99,21 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // process an image, fetch something from the network, etc., it is ok to do it here,
         // synchronously. A loading view will show up in lieu of the actual contents in the
         // interim.
-        try {
-			Thread.sleep(500);
-			Bitmap bmp = getBitmapFromURL(mWidgetItems.get(position));	
-			rv.setImageViewBitmap(R.id.widget_item, bmp);
-            System.out.println("Loading view " + position);
-            
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+		if(isOnline()){
+			shp =mContext.getSharedPreferences("mshp",mContext.MODE_PRIVATE);
+			try {
+				Thread.sleep(500);
+				bmp = getBitmapFromURL(mWidgetItems.get(position));	
+
+				
+				System.out.println("Loading view " + position);
+
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		rv.setImageViewBitmap(R.id.widget_item, bmp);
 
         // Return the remote views object.
         return rv;
@@ -140,6 +145,7 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // in its current state while work is being done here, so you don't need to worry about
         // locking up the widget.
 		
+		
     }
 	
 	public static Bitmap getBitmapFromURL(String src) {  
@@ -159,5 +165,13 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
             return null;
         }
+	}
+	public boolean isOnline() {
+		ConnectivityManager cm =(ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo netInfo = cm.getActiveNetworkInfo();
+		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+			return true;
+		}
+		return false;
 	}
 }

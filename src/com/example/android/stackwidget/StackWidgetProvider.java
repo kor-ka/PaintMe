@@ -24,10 +24,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.RemoteViews;
 import android.widget.Toast;
+import com.example.android.stackwidget.StackWidgetService;
 
 public class StackWidgetProvider extends AppWidgetProvider {
     public static final String TOAST_ACTION = "com.example.android.stackwidget.TOAST_ACTION";
     public static final String EXTRA_ITEM = "com.example.android.stackwidget.EXTRA_ITEM";
+	
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
@@ -47,14 +49,16 @@ public class StackWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         AppWidgetManager mgr = AppWidgetManager.getInstance(context);
+		int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+											 AppWidgetManager.INVALID_APPWIDGET_ID);
         if (intent.getAction().equals(TOAST_ACTION)) {
-            int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-                    AppWidgetManager.INVALID_APPWIDGET_ID);
+            
             int viewIndex = intent.getIntExtra(EXTRA_ITEM, 0);
             Toast.makeText(context, "Touched view " + viewIndex, Toast.LENGTH_SHORT).show();
 			
         }
         super.onReceive(context, intent);
+	
     }
 
     @Override
