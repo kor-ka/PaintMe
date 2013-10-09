@@ -25,6 +25,8 @@ import android.widget.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.text.*;
+import android.provider.*;
 
 public class StackWidgetService extends RemoteViewsService {
     @Override
@@ -111,20 +113,27 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
 	        		if (!exportDir.exists()) { exportDir.mkdirs(); }
 
-				SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+				try
+				{
+					SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 		    		String date = sdf.format(new Date(System.currentTimeMillis()));
 
-	        		File file = new File(exportDir, position+".png");
-				fOut = new FileOutputStream(file);
+	        		File file = new File(exportDir, position + ".png");
 
-				getImageBitmap(mWidgetItems.get(position)).compress(Bitmap.CompressFormat.PNG, 100, fOut);
-				fOut.flush();
-				fOut.close();
+					fOut = new FileOutputStream(file);
 
-				MediaStore.Images.Media.insertImage(getContentResolver(),file.getAbsolutePath(),file.getName(),file.getName());
+
+					bmp.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+					fOut.flush();
+					fOut.close();
+
+					MediaStore.Images.Media.insertImage(mContext.getContentResolver(), file.getAbsolutePath(), file.getName(), file.getName());
+
+					System.out.println("Loading view " + position);
+				}
+				catch (IOException e)
+				{}
 				
-				System.out.println("Loading view " + position);
-
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
