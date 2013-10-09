@@ -54,9 +54,9 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // for example downloading or creating content etc, should be deferred to onDataSetChanged()
         // or getViewAt(). Taking more than 20 seconds in this call will result in an ANR.
       //  for (int i = 0; i < mCount; i++) {
-		mWidgetItems.add("https://dl.dropboxusercontent.com/s/b503c92w7d7uuxb/72.png?token_hash=AAH--mSSyV1AiNGYJKFX5eoTPKuQtyLcrP7TclbYs7UVLA&dl=1");
-		mWidgetItems.add("https://dl.dropboxusercontent.com/s/22dxa79gac3jds8/550587.png?token_hash=AAFO0LcwahGd9dAzPHKckMU5dH3W1buoVv4LrCaHfATkCQ&dl=1");
-		mWidgetItems.add("https://dl.dropboxusercontent.com/s/iowxdnbor2v28j2/Simple_tux.png?token_hash=AAFNAciWARCOqZBhcJuBveVt0tA0vLjRS1euLUPh8nKgCQ&dl=1");
+		mWidgetItems.add("https://dl.dropboxusercontent.com/u/30840341/paintme/0.png");
+		mWidgetItems.add("https://dl.dropboxusercontent.com/u/30840341/paintme/1.png");
+		mWidgetItems.add("https://dl.dropboxusercontent.com/u/30840341/paintme/2.png");
     //    }
 
         // We sleep for 3 seconds here to show how the empty view appears in the interim.
@@ -202,7 +202,7 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
             	BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-		Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory()+"/"+position+".png", options);
+		Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory()+"/PaintMe/"+position+".png", options);
             	return bitmap;
 
 
